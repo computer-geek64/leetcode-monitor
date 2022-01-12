@@ -5,7 +5,6 @@ import os
 import warnings
 import requests
 from time import sleep
-from datetime import datetime
 from selenium import webdriver
 
 
@@ -19,10 +18,13 @@ driver.get('https://leetcode.com/{username}/'.format(username=os.environ['LEETCO
 sleep(3)
 
 div_list = driver.find_elements_by_css_selector('div.ant-spin-container')
-while len(div_list) < 2:
+while len(div_list) < 3:
     sleep(5)
+    div_list = driver.find_elements_by_css_selector('div.ant-spin-container')
 
-if div_list[2].find_element_by_css_selector('li:first-child > a > span.css-6jjn9s').text:
+if 'day' in div_list[2].find_element_by_css_selector('li:first-child > a > span.css-6jjn9s').text:
     requests.get(os.environ['HEALTHCHECKS_URL'] + '/fail', timeout=10)
 else:
     requests.get(os.environ['HEALTHCHECKS_URL'], timeout=10)
+
+driver.close()
