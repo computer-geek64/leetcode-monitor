@@ -18,7 +18,11 @@ driver = webdriver.Firefox(options=options)
 driver.get('https://leetcode.com/{username}/'.format(username=os.environ['LEETCODE_USERNAME']))
 sleep(3)
 
-if 'day' in driver.find_elements_by_css_selector('div.ant-spin-container')[2].find_element_by_css_selector('li:first-child > a > span.css-6jjn9s').text:
+div_list = driver.find_elements_by_css_selector('div.ant-spin-container')
+while len(div_list) < 2:
+    sleep(5)
+
+if div_list[2].find_element_by_css_selector('li:first-child > a > span.css-6jjn9s').text:
     requests.get(os.environ['HEALTHCHECKS_URL'] + '/fail', timeout=10)
 else:
     requests.get(os.environ['HEALTHCHECKS_URL'], timeout=10)
